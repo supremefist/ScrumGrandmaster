@@ -43,7 +43,7 @@ public class ScrumGMView extends JFrame implements KeyListener {
 
     private void addComponents() {
         displayArea = new JTextArea();
-        displayArea.setText("Welcome to ScrumGM!  Press space to start!");
+        displayArea.setText("Welcome to ScrumGM!  Press space to start...");
         displayArea.setEditable(false);
         displayArea.addKeyListener(this);
         
