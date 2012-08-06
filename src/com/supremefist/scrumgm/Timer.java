@@ -43,6 +43,7 @@ public class Timer extends Thread {
         }
     }
     
+    
     public long getMs() {
         return currentMs;
     }

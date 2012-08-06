@@ -3,6 +3,8 @@ package com.supremefist.scrumgm;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
@@ -10,7 +12,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-public class ScrumGMView extends JFrame implements KeyListener {
+public class ScrumGMView extends JFrame implements KeyListener, WindowListener {
 
     JTextArea displayArea;
     ScrumGM control = null;
@@ -24,7 +26,7 @@ public class ScrumGMView extends JFrame implements KeyListener {
     
     public void createAndShowGUI() {
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE );
         setSize(400, 400);
         
         addComponents();
@@ -46,6 +48,7 @@ public class ScrumGMView extends JFrame implements KeyListener {
         displayArea.setText("Welcome to ScrumGM!  Press space to start...");
         displayArea.setEditable(false);
         displayArea.addKeyListener(this);
+        this.addWindowListener(this);
         
         getContentPane().add(displayArea, BorderLayout.CENTER);
     }
@@ -72,6 +75,45 @@ public class ScrumGMView extends JFrame implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        control.destroy();
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
         // TODO Auto-generated method stub
         
     }
