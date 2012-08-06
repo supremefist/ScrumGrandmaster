@@ -15,6 +15,9 @@ import com.sun.speech.freetts.VoiceManager;
 
 public class ScrumGM {
 
+    private final static boolean verbose = false;
+    
+
     VoiceManager voiceManager = VoiceManager.getInstance();
     Voice voice = null;
 
@@ -93,8 +96,13 @@ public class ScrumGM {
                 .add("Ate dee bloooow fuuuun ooooooh suuuuuh heeeeeeee?");
         welcomeMessages.add("Remember to log your time guys!");
 
-        say(welcomeMessages.get(10));
-        // say(welcomeMessages.get(random.nextInt(welcomeMessages.size())));
+        //say(welcomeMessages.get(10));
+        if (verbose) {
+            say(welcomeMessages.get(random.nextInt(welcomeMessages.size())));
+        }
+        else {
+            say("Ready.");
+        }
 
         while (running) {
 
@@ -129,29 +137,35 @@ public class ScrumGM {
     }
 
     public void scrum() {
+        
         scrumming = true;
 
         List<String> participants = new Vector<String>();
-        participants.add("Riaan");
-        participants.add("Matthew");
-        participants.add("Leendert");
-        participants.add("Alex");
-        participants.add("John");
-
         List<String> pronounceNames = new Vector<String>();
-        pronounceNames.add("Riaan");
-        pronounceNames.add("Matthew");
-        pronounceNames.add("Leeuhndirt");
-        pronounceNames.add("Alex");
-        pronounceNames.add("John");
-
         List<String> quips = new Vector<String>();
+
+        participants.add("Riaan");
+        pronounceNames.add("Riaan");
         quips.add("thee hilarious and incredibly handsome man");
+        
+        participants.add("Matthew");
+        pronounceNames.add("Matthew");
         quips.add("no surf talk");
+        
+        participants.add("Leendert");
+        pronounceNames.add("Leahn dirt");
         quips.add("our venerable master");
+        
+        participants.add("Alex");
+        pronounceNames.add("Alex");
         quips.add("formidable maintainer of the beautiful are ess vee");
+
+        participants.add("John");
+        pronounceNames.add("John");
         quips.add("the professor in training");
 
+
+        
         long remainingDurationMs = scrumDurationMs;
 
         while ((participants.size() > 0) && (running)) {
@@ -165,11 +179,14 @@ public class ScrumGM {
 
             long maxDuration = remainingDurationMs / participants.size();
             view.showText("Go " + participantName + " for " + maxDuration
-                    / 1000 + " seconds...");
+                    / 1000 + " seconds...\n"
+                    + "Total time remaining: " + remainingDurationMs / 1000);
             timer.startTimer();
 
-            say(pronounceName + " proceed!");
-            say(quip);
+            say(pronounceName + " go!");
+            if (verbose) {
+                say(quip);
+            }
 
             long personDuration = timer.getMs();
 
@@ -183,7 +200,10 @@ public class ScrumGM {
                     view.showText("Finish up " + participantName
                             + "!  Less than 30 seconds left!");
 
-                    say("Hurry up " + pronounceName + "!  You have 30 seconds!");
+                    if (verbose) {
+                        say("Hurry up " + pronounceName + "!");
+                    }
+                    say("You have 30 seconds!");
 
                     warned = true;
                 }
@@ -196,8 +216,12 @@ public class ScrumGM {
                 }
             }
 
-            say(pronounceName + " finished!");
+            if (verbose) {
+                say(pronounceName + " finished!");
+            }
+            
             view.showText(participantName + " done!");
+                
             timer.stopTimer();
             timer.reset();
 
@@ -208,7 +232,12 @@ public class ScrumGM {
 
         }
 
-        say("Congratulations, scrum completed successfully!");
+        if (verbose) {
+            say("Congratulations, scrum completed successfully!");
+        }
+        else {
+            say("Scrum complete!");
+        }
         view.showText("Scrum complete!  Press space to restart...");
         timer.terminate();
 
