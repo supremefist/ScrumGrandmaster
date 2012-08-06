@@ -16,13 +16,12 @@ import com.sun.speech.freetts.VoiceManager;
 public class ScrumGM {
 
     private final static boolean verbose = false;
-    
 
     VoiceManager voiceManager = VoiceManager.getInstance();
     Voice voice = null;
 
     static Random random = new Random();
-    private final static long scrumDurationMs = 5 * 60 * 1000;
+    private final static long scrumDurationMs = 15 * 60 * 1000;
     ScrumGMView view = null;
     private boolean nextTriggered = false;
     public boolean scrummingTriggered = false;
@@ -57,22 +56,18 @@ public class ScrumGM {
     }
 
     public void initializeVoice() {
-        listAllVoices();
+        //listAllVoices();
         voice = voiceManager.getVoice("kevin16");
-        System.out.println(voice.getPitch());
-        System.out.println(voice.getPitchRange());
-        System.out.println(voice.getPitchShift());
-        System.out.println(voice.getDurationStretch());
 
         voice.setDurationStretch(1.0f);
         /*
          * voice.setPitch(100.0f); voice.setPitchRange(11.0f);
          * voice.setPitchShift(1.0f); voice.setDurationStretch(1.0f);
          */
-        voice.setPitch(90.0f);
+        voice.setPitch(100.0f);
         voice.setPitchRange(15.0f);
-        voice.setPitchShift(2.0f);
-        voice.setDurationStretch(1.0f);
+        voice.setPitchShift(1.0f);
+        voice.setDurationStretch(1f);
 
         // System.out.println()
         voice.allocate();
@@ -81,27 +76,10 @@ public class ScrumGM {
 
     public void start() {
 
-        List<String> welcomeMessages = new Vector<String>();
-        welcomeMessages.add("Welcome scrummers!  Are you ready?");
-        welcomeMessages.add("KILL ALL HUMANS!  I mean... welcome!");
-        welcomeMessages.add("One plus one is... oh... didn't see you there.");
-        welcomeMessages.add("Crouch, touch, pause... ENGAGE!");
-        welcomeMessages.add("Oh no!  Not his again...");
-        welcomeMessages.add("Ronery... I'm so ronery");
-        welcomeMessages.add("Team... I am your scrum master");
-        welcomeMessages.add("ay eye systems engaged... NOT!");
-        welcomeMessages
-                .add("DO YOU KNOW WHO I AM!? No really, tell me who I am!");
-        welcomeMessages
-                .add("Ate dee bloooow fuuuun ooooooh suuuuuh heeeeeeee?");
-        welcomeMessages.add("Remember to log your time guys!");
-
-        //say(welcomeMessages.get(10));
         if (verbose) {
-            say(welcomeMessages.get(random.nextInt(welcomeMessages.size())));
-        }
-        else {
-            say("Ready.");
+            welcomeVerbal();
+        } else {
+            say("Ready.  Press space.");
         }
 
         while (running) {
@@ -121,7 +99,7 @@ public class ScrumGM {
     }
 
     public void say(String text) {
-        System.out.println("Saying " + text);
+        System.out.println("ScrumGM: " + text);
         voice.speak(text);
 
     }
@@ -136,8 +114,44 @@ public class ScrumGM {
         timer.terminate();
     }
 
-    public void scrum() {
+    public void warnTimeVerbal() {
+        int seconds = 30;
+        String[] warnings = { "Warning, you have " + seconds + " seconds!",
+                "Quickly! A mere " + seconds + " seconds left!",
+                "Hurry!  Who do you think you are? The king of the world?",
+                "Boring, moving on in " + seconds + " seconds." };
+
+        say(warnings[random.nextInt(warnings.length)]);
+    }
+
+    public void welcomeVerbal() {
+        String[] welcomeMessages = { "Welcome scrummers!  Are you ready?",
+                "KILL ALL HUMANS!  I mean... welcome!",
+                "One plus one is... oh... didn't see you there.",
+                "Crouch, touch, pause... ENGAGE!", "Oh no!  Not his again...",
+                "Ronery... I'm so ronery", "Team... I am your scrum master",
+                "ay eye systems engaged... NOT!",
+                "DO YOU KNOW WHO I AM!? No really, tell me who I am!",
+                "Remember to log your time guys!",
+                "Daisy.  Daisy.  Give me your answer do." };
+
+        say(welcomeMessages[random.nextInt(welcomeMessages.length)]);
+    }
+    
+    String secondsToTimeString(int milliseconds) {
         
+        int minutes = milliseconds / 60000;
+        int seconds = (int)(milliseconds / 1000) % 60;
+        return minutes + " minutes and " + seconds + " seconds";
+        
+        
+    }
+    public void stateTime(int seconds) {
+        
+    }
+
+    public void scrum() {
+
         scrumming = true;
 
         List<String> participants = new Vector<String>();
@@ -147,15 +161,15 @@ public class ScrumGM {
         participants.add("Riaan");
         pronounceNames.add("Riaan");
         quips.add("thee hilarious and incredibly handsome man");
-        
+
         participants.add("Matthew");
         pronounceNames.add("Matthew");
         quips.add("no surf talk");
-        
+
         participants.add("Leendert");
         pronounceNames.add("Leahn dirt");
         quips.add("our venerable master");
-        
+
         participants.add("Alex");
         pronounceNames.add("Alex");
         quips.add("formidable maintainer of the beautiful are ess vee");
@@ -164,8 +178,6 @@ public class ScrumGM {
         pronounceNames.add("John");
         quips.add("the professor in training");
 
-
-        
         long remainingDurationMs = scrumDurationMs;
 
         while ((participants.size() > 0) && (running)) {
@@ -179,8 +191,8 @@ public class ScrumGM {
 
             long maxDuration = remainingDurationMs / participants.size();
             view.showText("Go " + participantName + " for " + maxDuration
-                    / 1000 + " seconds...\n"
-                    + "Total time remaining: " + remainingDurationMs / 1000);
+                    / 1000 + " seconds...\n" + "Total time remaining: "
+                    + remainingDurationMs / 1000);
             timer.startTimer();
 
             say(pronounceName + " go!");
@@ -203,7 +215,7 @@ public class ScrumGM {
                     if (verbose) {
                         say("Hurry up " + pronounceName + "!");
                     }
-                    say("You have 30 seconds!");
+                    warnTimeVerbal();
 
                     warned = true;
                 }
@@ -216,12 +228,16 @@ public class ScrumGM {
                 }
             }
 
+            if (!nextTriggered) {
+                say("Time's up!  Sorry!");
+            }
+
             if (verbose) {
                 say(pronounceName + " finished!");
             }
-            
+
             view.showText(participantName + " done!");
-                
+
             timer.stopTimer();
             timer.reset();
 
@@ -234,9 +250,8 @@ public class ScrumGM {
 
         if (verbose) {
             say("Congratulations, scrum completed successfully!");
-        }
-        else {
-            say("Scrum complete!");
+        } else {
+            say("Scrum complete with " + secondsToTimeString((int) remainingDurationMs) + " left!");
         }
         view.showText("Scrum complete!  Press space to restart...");
         timer.terminate();
@@ -250,7 +265,6 @@ public class ScrumGM {
         // creating and showing this application's GUI.
         final ScrumGM scrummer = new ScrumGM();
         scrummer.start();
-        System.out.println("Main ended");
     }
 
     public void startTriggered() {

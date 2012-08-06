@@ -55,15 +55,18 @@ public class ScrumGMView extends JFrame implements KeyListener, WindowListener {
     
 
     @Override
-    public void keyPressed(KeyEvent arg0) {
+    public void keyPressed(KeyEvent keyEvent) {
      
-        if (arg0.getKeyCode() == 32) {
+        if (keyEvent.getKeyCode() == 32) {
             if (control.scrumming) { 
                 control.nextTriggered();
             }
             else {
                 control.startTriggered();
             }
+        }
+        else if (keyEvent.getKeyCode() == 27) {
+            control.destroy();
         }
     }
 
