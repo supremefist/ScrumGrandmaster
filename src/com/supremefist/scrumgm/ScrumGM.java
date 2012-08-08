@@ -41,7 +41,6 @@ public class ScrumGM {
         timer = new Timer();
 
         initializeVoice();
-
     }
 
     public static void listAllVoices() {
@@ -56,7 +55,7 @@ public class ScrumGM {
     }
 
     public void initializeVoice() {
-        //listAllVoices();
+        // listAllVoices();
         voice = voiceManager.getVoice("kevin16");
 
         voice.setDurationStretch(1.0f);
@@ -65,7 +64,7 @@ public class ScrumGM {
          * voice.setPitchShift(1.0f); voice.setDurationStretch(1.0f);
          */
         voice.setPitch(100.0f);
-        voice.setPitchRange(15.0f);
+        voice.setPitchRange(11.0f);
         voice.setPitchShift(1.0f);
         voice.setDurationStretch(1f);
 
@@ -118,8 +117,11 @@ public class ScrumGM {
         int seconds = 30;
         String[] warnings = { "Warning, you have " + seconds + " seconds!",
                 "Quickly! A mere " + seconds + " seconds left!",
-                "Hurry!  Who do you think you are? The king of the world?",
-                "Boring, moving on in " + seconds + " seconds." };
+                "Snooooze, " + seconds + " seconds left!",
+                "Noh... pleeease.  Take your time!",
+                "Borreing, moving on in " + seconds + " seconds.",
+                "People are loozing iintrest.  " + seconds + " seconds left.",
+                seconds + " seconds until self-destruct." };
 
         say(warnings[random.nextInt(warnings.length)]);
     }
@@ -137,17 +139,17 @@ public class ScrumGM {
 
         say(welcomeMessages[random.nextInt(welcomeMessages.length)]);
     }
-    
+
     String secondsToTimeString(int milliseconds) {
-        
+
         int minutes = milliseconds / 60000;
-        int seconds = (int)(milliseconds / 1000) % 60;
+        int seconds = (int) (milliseconds / 1000) % 60;
         return minutes + " minutes and " + seconds + " seconds";
-        
-        
+
     }
+
     public void stateTime(int seconds) {
-        
+
     }
 
     public void scrum() {
@@ -157,7 +159,7 @@ public class ScrumGM {
         List<String> participants = new Vector<String>();
         List<String> pronounceNames = new Vector<String>();
         List<String> quips = new Vector<String>();
-
+        
         participants.add("Riaan");
         pronounceNames.add("Riaan");
         quips.add("thee hilarious and incredibly handsome man");
@@ -180,6 +182,9 @@ public class ScrumGM {
 
         long remainingDurationMs = scrumDurationMs;
 
+        
+        int totalParticipants = participants.size();
+        
         while ((participants.size() > 0) && (running)) {
             int selectedParticipant = random.nextInt(participants.size());
             String participantName = participants.get(selectedParticipant);
@@ -189,7 +194,8 @@ public class ScrumGM {
             boolean warned = false;
             nextTriggered = false;
 
-            long maxDuration = remainingDurationMs / participants.size();
+            //long maxDuration = remainingDurationMs / participants.size();
+            long maxDuration = scrumDurationMs / totalParticipants; 
             view.showText("Go " + participantName + " for " + maxDuration
                     / 1000 + " seconds...\n" + "Total time remaining: "
                     + remainingDurationMs / 1000);
@@ -251,7 +257,8 @@ public class ScrumGM {
         if (verbose) {
             say("Congratulations, scrum completed successfully!");
         } else {
-            say("Scrum complete with " + secondsToTimeString((int) remainingDurationMs) + " left!");
+            say("Scrum complete with "
+                    + secondsToTimeString((int) remainingDurationMs) + " left!");
         }
         view.showText("Scrum complete!  Press space to restart...");
         timer.terminate();
